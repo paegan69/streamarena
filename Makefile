@@ -1099,7 +1099,13 @@ ifeq ($(PLATFORM),emscripten)
     CLIENT_EXTRA_FILES+=code/web/server.html
   endif
 
-  CLIENT_CFLAGS+=-s USE_SDL=2
+	CLIENT_CFLAGS+=-s USE_SDL=2
+ 
+  # HumbleNet is C++ (humblenet_asmjs_amalgam.cpp). Modern Emscripten does
+  # not pull the C++ runtime automatically when the final link is driven by
+  # emcc, so explicitly request it for both wasm targets.
+  CLIENT_LDFLAGS+=-sDEFAULT_TO_CXX
+  SERVER_LDFLAGS+=-sDEFAULT_TO_CXX
 
   CLIENT_LDFLAGS+=-s TOTAL_MEMORY=256mb -sALLOW_MEMORY_GROWTH
   CLIENT_LDFLAGS+=-s STACK_SIZE=5MB
